@@ -45,16 +45,17 @@
         /* 滾動提示 */
         .scroll-hint {
             position: fixed;
-            bottom: 70px;
-            right: 20px;
-            background: rgba(116, 185, 255, 0.8);
+            bottom: 85px;
+            right: 15px;
+            background: rgba(116, 185, 255, 0.9);
             color: white;
-            padding: 8px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             display: none;
-            z-index: 999;
+            z-index: 998;
             animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         @keyframes pulse {
@@ -64,6 +65,64 @@
 
         .scroll-hint.show {
             display: block;
+        }
+
+        /* 確保所有固定元素不重疊 */
+        .nav-buttons {
+            z-index: 1001;
+        }
+
+        .slide-indicator {
+            z-index: 1000;
+        }
+
+        /* 加強手機版內容區域 */
+        @media (max-width: 768px) {
+            .presentation-container {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .slide {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* 避免內容被截斷 */
+            .content-grid {
+                margin-bottom: 20px;
+            }
+
+            .content-box:last-child {
+                margin-bottom: 20px;
+            }
+
+            /* 改善觸控體驗 */
+            .nav-btn, .indicator-dot {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* 確保輸入框可見 */
+            .calc-input input, .expense-item input {
+                -webkit-appearance: none;
+                appearance: none;
+                border-radius: 6px;
+                border: 2px solid #ddd;
+                background: white;
+            }
+
+            .calc-input input:focus, .expense-item input:focus {
+                border-color: #74b9ff;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(116, 185, 255, 0.2);
+            }
         }
 
         /* 首頁樣式 */
@@ -177,22 +236,38 @@
             border-radius: 15px;
             padding: 25px;
             margin: 20px 0;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .calc-input {
             display: flex;
             align-items: center;
-            margin: 10px 0;
+            margin: 12px 0;
             font-size: 1.1rem;
+            justify-content: space-between;
+            min-height: 40px;
+        }
+
+        .calc-input span:first-child {
+            flex-shrink: 0;
+            margin-right: 8px;
         }
 
         .calc-input input {
             border: 2px solid #74b9ff;
             border-radius: 8px;
             padding: 8px 12px;
-            margin: 0 10px;
+            margin: 0 8px;
             font-size: 1.1rem;
             width: 120px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .calc-input span:last-child {
+            flex-shrink: 0;
+            margin-left: 4px;
         }
 
         .calc-result {
@@ -203,6 +278,8 @@
             margin-top: 15px;
             font-weight: bold;
             text-align: center;
+            font-size: 1rem;
+            line-height: 1.4;
         }
 
         /* 圓餅圖樣式 */
@@ -531,19 +608,29 @@
             .expense-item {
                 font-size: 0.9rem;
                 margin: 10px 0;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 5px;
+                align-items: center;
+                justify-content: space-between;
             }
 
             .expense-item span:first-child {
                 min-width: 70px;
                 font-size: 0.85rem;
+                flex-shrink: 0;
             }
 
             .expense-item input {
                 width: 80px;
                 padding: 6px 8px;
                 font-size: 0.9rem;
+                flex-shrink: 0;
+                text-align: center;
+            }
+
+            .expense-item span:last-child {
+                flex-shrink: 0;
+                font-size: 0.85rem;
             }
 
             .expense-summary {
@@ -553,6 +640,14 @@
             .summary-item {
                 font-size: 1rem;
                 margin: 6px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: nowrap;
+            }
+
+            .summary-item span {
+                white-space: nowrap;
             }
 
             .financial-advice {
@@ -562,6 +657,18 @@
             .advice-item {
                 padding: 10px 12px;
                 font-size: 0.85rem;
+                line-height: 1.3;
+            }
+
+            /* 手機版互動框優化 */
+            .interactive-box {
+                padding: 12px;
+                margin: 12px 0;
+            }
+
+            .interactive-title {
+                font-size: 1rem;
+                margin-bottom: 8px;
             }
             
             /* 手機版按鈕調整 */
