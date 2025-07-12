@@ -32,13 +32,38 @@
             position: absolute;
             top: 0;
             left: 0;
+            overflow-y: auto; /* 允許垂直滾動 */
         }
 
         .slide.active {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* 改為從頂部開始 */
             align-items: center;
+        }
+
+        /* 滾動提示 */
+        .scroll-hint {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: rgba(116, 185, 255, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 999;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .scroll-hint.show {
+            display: block;
         }
 
         /* 首頁樣式 */
@@ -197,7 +222,94 @@
             position: relative;
         }
 
-        .pie-legend {
+        /* 動態圓餅圖樣式 */
+        .dynamic-pie-chart {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff7675 0deg 144deg,
+                #74b9ff 144deg 230.4deg,
+                #fd79a8 230.4deg 252deg,
+                #fdcb6e 252deg 288deg,
+                #6c5ce7 288deg 309.6deg,
+                #00b894 309.6deg 350deg,
+                #e17055 350deg 360deg
+            );
+            margin: 20px auto;
+            position: relative;
+            transition: background 0.5s ease;
+        }
+
+        /* 支出輸入樣式 */
+        .expense-inputs {
+            margin: 20px 0;
+        }
+
+        .expense-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 1rem;
+            gap: 8px;
+        }
+
+        .expense-item span:first-child {
+            min-width: 80px;
+            font-weight: 500;
+        }
+
+        .expense-item input {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1rem;
+            width: 100px;
+            text-align: right;
+            transition: border-color 0.3s ease;
+        }
+
+        .expense-item input:focus {
+            outline: none;
+            border-color: #74b9ff;
+            box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.1);
+        }
+
+        /* 支出總結樣式 */
+        .expense-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            border-left: 4px solid #74b9ff;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .summary-item.total {
+            color: #2d3436;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .summary-item.remaining {
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .summary-item.warning {
+            color: #e84393;
+        }
+
+        /* 圖例樣式 */
+        .pie-legend, .dynamic-pie-legend {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
@@ -215,6 +327,38 @@
             height: 20px;
             border-radius: 3px;
             margin-right: 8px;
+        }
+
+        /* 理財建議樣式 */
+        .financial-advice {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .advice-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .advice-item.good {
+            background: #d1f2eb;
+            color: #00b894;
+            border-left: 4px solid #00b894;
+        }
+
+        .advice-item.warning {
+            background: #fce4ec;
+            color: #e84393;
+            border-left: 4px solid #e84393;
+        }
+
+        .advice-item.danger {
+            background: #ffebee;
+            color: #e74c3c;
+            border-left: 4px solid #e74c3c;
         }
 
         /* 導航按鈕 */
@@ -288,19 +432,247 @@
             animation: slideIn 0.6s ease-out;
         }
 
-        /* 響應式設計 */
+        /* 手機版響應式設計 */
         @media (max-width: 768px) {
+            .slide {
+                padding: 20px 15px 80px 15px; /* 底部增加空間給按鈕 */
+                overflow-y: auto; /* 允許上下滾動 */
+                height: 100vh;
+                box-sizing: border-box;
+            }
+            
             .content-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
             
             .main-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+                margin-bottom: 20px;
             }
             
-            .slide {
-                padding: 30px 20px;
+            .slide-title {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+            
+            .subtitle {
+                font-size: 1.4rem;
+                margin-bottom: 25px;
+            }
+            
+            .target-audience {
+                padding: 15px 25px;
+                font-size: 1.1rem;
+            }
+            
+            .content-box {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .content-box h3 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .content-list li {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+            
+            .interactive-box {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .interactive-title {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+            
+            .calculator {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .calc-input {
+                font-size: 1rem;
+                margin: 8px 0;
+                flex-wrap: wrap;
+            }
+            
+            .calc-input input {
+                width: 100px;
+                font-size: 1rem;
+                margin: 5px;
+            }
+            
+            .pie-chart {
+                width: 250px;
+                height: 250px;
+            }
+
+            .dynamic-pie-chart {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .pie-legend, .dynamic-pie-legend {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .legend-item {
+                font-size: 0.85rem;
+            }
+
+            /* 手機版支出輸入優化 */
+            .expense-item {
+                font-size: 0.9rem;
+                margin: 10px 0;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .expense-item span:first-child {
+                min-width: 70px;
+                font-size: 0.85rem;
+            }
+
+            .expense-item input {
+                width: 80px;
+                padding: 6px 8px;
+                font-size: 0.9rem;
+            }
+
+            .expense-summary {
+                padding: 12px;
+            }
+
+            .summary-item {
+                font-size: 1rem;
+                margin: 6px 0;
+            }
+
+            .financial-advice {
+                gap: 8px;
+            }
+
+            .advice-item {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            
+            /* 手機版按鈕調整 */
+            .nav-buttons {
+                position: fixed;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 10px;
+                z-index: 1000;
+                background: rgba(255,255,255,0.9);
+                padding: 8px;
+                border-radius: 25px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                border-radius: 20px;
+                min-width: 60px;
+            }
+            
+            /* 手機版頁碼指示器 */
+            .slide-indicator {
+                position: fixed;
+                bottom: 55px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1000;
+            }
+            
+            .indicator-dot {
+                width: 10px;
+                height: 10px;
+            }
+            
+            /* 手機版特殊樣式調整 */
+            .highlight-box {
+                padding: 15px;
+                font-size: 0.95rem;
+            }
+            
+            .warning-box {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+            
+            .success-box {
+                padding: 15px;
+                font-size: 0.95rem;
+            }
+            
+            /* 確保內容不被按鈕遮擋 */
+            .slide.active {
+                padding-bottom: 100px;
+            }
+        }
+        
+        /* 極小螢幕優化 */
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .slide-title {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .content-box {
+                padding: 15px;
+            }
+            
+            .content-box h3 {
+                font-size: 1.1rem;
+            }
+            
+            .pie-chart {
+                width: 200px;
+                height: 200px;
+            }
+
+            .dynamic-pie-chart {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .calc-input {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .calc-input input {
+                width: 150px;
+                margin: 2px 0;
+            }
+
+            /* 極小螢幕支出輸入優化 */
+            .expense-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 3px;
+            }
+
+            .expense-item input {
+                width: 120px;
             }
         }
 
@@ -500,64 +872,169 @@
             </div>
         </div>
 
-        <!-- 第6頁：家庭支出分析 -->
+        <!-- 第6頁：互動式家庭支出分析 -->
         <div class="slide content-slide">
-            <h2 class="slide-title">📊 家庭支出大解析</h2>
+            <h2 class="slide-title">📊 我家的支出分析器</h2>
             <div class="content-grid">
                 <div class="content-box">
-                    <h3>💰 每月支出分配（以5萬為例）</h3>
-                    <div class="pie-chart"></div>
-                    <div class="pie-legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #ff7675;"></div>
-                            <span>房貸 40%</span>
+                    <h3>💰 輸入你家每月支出</h3>
+                    <div class="expense-inputs">
+                        <div class="expense-item">
+                            <span>🏠 房貸/房租：</span>
+                            <input type="number" id="housing" placeholder="20000" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #74b9ff;"></div>
-                            <span>生活費 24%</span>
+                        <div class="expense-item">
+                            <span>🍽️ 生活費：</span>
+                            <input type="number" id="living" placeholder="12000" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #fd79a8;"></div>
-                            <span>交通 6%</span>
+                        <div class="expense-item">
+                            <span>🚗 交通費：</span>
+                            <input type="number" id="transport" placeholder="3000" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #fdcb6e;"></div>
-                            <span>教育 10%</span>
+                        <div class="expense-item">
+                            <span>📚 教育費：</span>
+                            <input type="number" id="education" placeholder="5000" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #6c5ce7;"></div>
-                            <span>保險 6%</span>
+                        <div class="expense-item">
+                            <span>🛡️ 保險費：</span>
+                            <input type="number" id="insurance" placeholder="3000" min="0">
+                            <span>元</span>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #00b894;"></div>
-                            <span>儲蓄 10%</span>
+                        <div class="expense-item">
+                            <span>🎉 娛樂費：</span>
+                            <input type="number" id="entertainment" placeholder="2000" min="0">
+                            <span>元</span>
+                        </div>
+                    </div>
+                    <div class="expense-summary">
+                        <div class="summary-item total">
+                            <span>總支出：</span>
+                            <span id="totalExpense">45,000</span>
+                            <span>元</span>
+                        </div>
+                        <div class="summary-item remaining">
+                            <span>剩餘金額：</span>
+                            <span id="remainingMoney">5,000</span>
+                            <span>元</span>
                         </div>
                     </div>
                 </div>
                 <div class="content-box">
-                    <h3>💡 支出優先順序</h3>
-                    <div style="margin: 20px 0;">
-                        <div style="background: #ff7675; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
-                            <strong>1. 基本需求</strong>：食物、住房、交通
+                    <h3>📈 支出圓餅圖</h3>
+                    <div class="dynamic-pie-chart" id="dynamicPieChart"></div>
+                    <div class="dynamic-pie-legend" id="dynamicPieLegend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff7675;"></div>
+                            <span id="housingPercent">房貸 40%</span>
                         </div>
-                        <div style="background: #fdcb6e; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
-                            <strong>2. 安全保障</strong>：保險、緊急預備金
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #74b9ff;"></div>
+                            <span id="livingPercent">生活費 24%</span>
                         </div>
-                        <div style="background: #74b9ff; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
-                            <strong>3. 未來投資</strong>：教育、理財、儲蓄
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fd79a8;"></div>
+                            <span id="transportPercent">交通 6%</span>
                         </div>
-                        <div style="background: #00b894; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
-                            <strong>4. 生活品質</strong>：娛樂、旅遊、享受
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fdcb6e;"></div>
+                            <span id="educationPercent">教育 10%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #6c5ce7;"></div>
+                            <span id="insurancePercent">保險 6%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #00b894;"></div>
+                            <span id="entertainmentPercent">娛樂 4%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e17055;"></div>
+                            <span id="remainingPercent">剩餘 10%</span>
                         </div>
                     </div>
-                    <div class="success-box">
-                        記住：先滿足需要，再考慮想要！
+                </div>
+            </div>
+            <div class="content-box" style="margin-top: 30px;">
+                <h3>💡 理財分析建議</h3>
+                <div id="financialAdvice" class="financial-advice">
+                    <div class="advice-item good">
+                        ✅ <strong>做得很好！</strong> 有剩餘金額可以存錢和投資
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 第7頁：投資理財入門 -->
+        <!-- 第7頁：支出優先順序指導 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">🎯 聰明支出優先順序</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>📋 支出優先順序金字塔</h3>
+                    <div style="margin: 20px 0;">
+                        <div style="background: #e74c3c; color: white; padding: 15px; border-radius: 8px; margin: 8px 0; text-align: center;">
+                            <strong>1. 🏠 基本生存需求</strong><br>
+                            <small>食物、住房、水電、基本交通</small>
+                        </div>
+                        <div style="background: #f39c12; color: white; padding: 15px; border-radius: 8px; margin: 8px 0; text-align: center;">
+                            <strong>2. 🛡️ 安全保障</strong><br>
+                            <small>保險、緊急預備金、醫療費</small>
+                        </div>
+                        <div style="background: #3498db; color: white; padding: 15px; border-radius: 8px; margin: 8px 0; text-align: center;">
+                            <strong>3. 📚 未來投資</strong><br>
+                            <small>教育、技能學習、儲蓄理財</small>
+                        </div>
+                        <div style="background: #27ae60; color: white; padding: 15px; border-radius: 8px; margin: 8px 0; text-align: center;">
+                            <strong>4. 🎉 生活品質</strong><br>
+                            <small>娛樂、旅遊、興趣愛好</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3>💡 理財黃金法則</h3>
+                    <div class="highlight-box">
+                        <strong>50/30/20 法則</strong>
+                    </div>
+                    <ul class="content-list">
+                        <li><strong>50% 必需品：</strong>房租、食物、交通、水電</li>
+                        <li><strong>30% 想要的：</strong>娛樂、外食、購物、興趣</li>
+                        <li><strong>20% 儲蓄：</strong>緊急預備金、投資、理財</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>小提醒：</strong><br>
+                        如果必需品超過50%，就要想辦法減少支出或增加收入了！
+                    </div>
+                </div>
+            </div>
+            <div class="content-box" style="margin-top: 30px;">
+                <h3>🎮 支出決策小遊戲</h3>
+                <div class="interactive-box">
+                    <div class="interactive-title">情境：你有1000元零用錢，會怎麼分配？</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                        <div style="background: #ff7675; color: white; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;" onclick="alert('很好！優先滿足基本需求是正確的!')">
+                            <strong>選項A</strong><br>
+                            500元存起來<br>
+                            300元買學用品<br>
+                            200元買零食
+                        </div>
+                        <div style="background: #74b9ff; color: white; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;" onclick="alert('要小心喔！先存錢再花錢會更好!')">
+                            <strong>選項B</strong><br>
+                            600元買遊戲<br>
+                            300元買衣服<br>
+                            100元存起來
+                        </div>
+                    </div>
+                </div>
+                <div class="success-box">
+                    記住：先滿足需要，再考慮想要，最後一定要存錢！
+                </div>
+            </div>
+        </div>
+
+        <!-- 第8頁：投資理財入門 -->
         <div class="slide content-slide">
             <h2 class="slide-title">📈 投資理財小學堂</h2>
             <div class="content-grid">
@@ -606,7 +1083,7 @@
             </div>
         </div>
 
-        <!-- 第8頁：實戰案例分析 -->
+        <!-- 第9頁：實戰案例分析 -->
         <div class="slide content-slide">
             <h2 class="slide-title">📚 實戰案例分析</h2>
             <div class="content-grid">
@@ -674,7 +1151,7 @@
             </div>
         </div>
 
-        <!-- 第9頁：行動計劃 -->
+        <!-- 第10頁：行動計劃 -->
         <div class="slide content-slide">
             <h2 class="slide-title">🎯 我的理財行動計劃</h2>
             <div class="content-grid">
@@ -740,7 +1217,7 @@
             </div>
         </div>
 
-        <!-- 第10頁：總結與祝福 -->
+        <!-- 第11頁：總結與祝福 -->
         <div class="slide title-slide">
             <h1 class="main-title">🎉 恭喜你！</h1>
             <p class="subtitle">你已經掌握了正確的理財觀念</p>
@@ -767,6 +1244,9 @@
             </div>
         </div>
     </div>
+
+    <!-- 滾動提示 -->
+    <div class="scroll-hint" id="scrollHint">👆 滑動瀏覽</div>
 
     <!-- 導航控制 -->
     <div class="nav-buttons">
@@ -808,7 +1288,34 @@
             // 更新按鈕狀態
             document.getElementById('prevBtn').disabled = currentSlide === 0;
             document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            // 檢查是否需要顯示滾動提示（僅手機版）
+            if (window.innerWidth <= 768) {
+                setTimeout(checkScrollHint, 500);
+            }
         }
+
+        // 檢查是否需要顯示滾動提示
+        function checkScrollHint() {
+            const activeSlide = slides[currentSlide];
+            const scrollHint = document.getElementById('scrollHint');
+            
+            if (activeSlide.scrollHeight > activeSlide.clientHeight) {
+                scrollHint.classList.add('show');
+                // 3秒後自動隱藏
+                setTimeout(() => {
+                    scrollHint.classList.remove('show');
+                }, 3000);
+            } else {
+                scrollHint.classList.remove('show');
+            }
+        }
+
+        // 滾動時隱藏提示
+        document.addEventListener('scroll', () => {
+            const scrollHint = document.getElementById('scrollHint');
+            scrollHint.classList.remove('show');
+        }, true);
 
         // 切換投影片
         function changeSlide(direction) {
@@ -823,6 +1330,40 @@
         function goToSlide(slideIndex) {
             currentSlide = slideIndex;
             updateSlideDisplay();
+        }
+
+        // 觸控手勢支援（手機滑動切換頁面）
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            const minSwipeDistance = 50;
+            
+            // 只有當水平滑動距離大於垂直滑動距離時才觸發頁面切換
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                if (deltaX > 0) {
+                    // 向右滑動 - 上一頁
+                    changeSlide(-1);
+                } else {
+                    // 向左滑動 - 下一頁
+                    changeSlide(1);
+                }
+            }
         }
 
         // 鍵盤控制
@@ -856,6 +1397,139 @@
             }
         }
 
+        // 支出分析器
+        function updateExpenseAnalysis() {
+            const housing = parseInt(document.getElementById('housing').value) || 0;
+            const living = parseInt(document.getElementById('living').value) || 0;
+            const transport = parseInt(document.getElementById('transport').value) || 0;
+            const education = parseInt(document.getElementById('education').value) || 0;
+            const insurance = parseInt(document.getElementById('insurance').value) || 0;
+            const entertainment = parseInt(document.getElementById('entertainment').value) || 0;
+
+            const totalExpense = housing + living + transport + education + insurance + entertainment;
+            const income = parseInt(document.getElementById('yearSalary').value) / 12 || 50000;
+            const remaining = income - totalExpense;
+
+            // 更新總結顯示
+            document.getElementById('totalExpense').textContent = totalExpense.toLocaleString();
+            const remainingElement = document.getElementById('remainingMoney');
+            remainingElement.textContent = remaining.toLocaleString();
+            
+            // 更新樣式
+            const remainingItem = remainingElement.closest('.summary-item');
+            remainingItem.className = 'summary-item';
+            if (remaining > 0) {
+                remainingItem.classList.add('remaining');
+            } else {
+                remainingItem.classList.add('warning');
+            }
+
+            // 計算百分比
+            const total = totalExpense + Math.max(remaining, 0);
+            const housingPercent = total > 0 ? (housing / total * 100).toFixed(1) : 0;
+            const livingPercent = total > 0 ? (living / total * 100).toFixed(1) : 0;
+            const transportPercent = total > 0 ? (transport / total * 100).toFixed(1) : 0;
+            const educationPercent = total > 0 ? (education / total * 100).toFixed(1) : 0;
+            const insurancePercent = total > 0 ? (insurance / total * 100).toFixed(1) : 0;
+            const entertainmentPercent = total > 0 ? (entertainment / total * 100).toFixed(1) : 0;
+            const remainingPercent = total > 0 ? (Math.max(remaining, 0) / total * 100).toFixed(1) : 0;
+
+            // 更新圖例
+            document.getElementById('housingPercent').textContent = `房貸 ${housingPercent}%`;
+            document.getElementById('livingPercent').textContent = `生活費 ${livingPercent}%`;
+            document.getElementById('transportPercent').textContent = `交通 ${transportPercent}%`;
+            document.getElementById('educationPercent').textContent = `教育 ${educationPercent}%`;
+            document.getElementById('insurancePercent').textContent = `保險 ${insurancePercent}%`;
+            document.getElementById('entertainmentPercent').textContent = `娛樂 ${entertainmentPercent}%`;
+            document.getElementById('remainingPercent').textContent = `剩餘 ${remainingPercent}%`;
+
+            // 更新圓餅圖
+            updatePieChart(housingPercent, livingPercent, transportPercent, educationPercent, insurancePercent, entertainmentPercent, remainingPercent);
+
+            // 更新理財建議
+            updateFinancialAdvice(remaining, income, totalExpense);
+        }
+
+        function updatePieChart(housing, living, transport, education, insurance, entertainment, remaining) {
+            const pieChart = document.getElementById('dynamicPieChart');
+            if (!pieChart) return;
+
+            // 轉換為角度
+            let currentAngle = 0;
+            const housingAngle = currentAngle + (housing * 3.6);
+            currentAngle = housingAngle;
+            const livingAngle = currentAngle + (living * 3.6);
+            currentAngle = livingAngle;
+            const transportAngle = currentAngle + (transport * 3.6);
+            currentAngle = transportAngle;
+            const educationAngle = currentAngle + (education * 3.6);
+            currentAngle = educationAngle;
+            const insuranceAngle = currentAngle + (insurance * 3.6);
+            currentAngle = insuranceAngle;
+            const entertainmentAngle = currentAngle + (entertainment * 3.6);
+            currentAngle = entertainmentAngle;
+            const remainingAngle = 360;
+
+            const gradient = `conic-gradient(
+                #ff7675 0deg ${housingAngle}deg,
+                #74b9ff ${housingAngle}deg ${livingAngle}deg,
+                #fd79a8 ${livingAngle}deg ${transportAngle}deg,
+                #fdcb6e ${transportAngle}deg ${educationAngle}deg,
+                #6c5ce7 ${educationAngle}deg ${insuranceAngle}deg,
+                #00b894 ${insuranceAngle}deg ${entertainmentAngle}deg,
+                #e17055 ${entertainmentAngle}deg ${remainingAngle}deg
+            )`;
+
+            pieChart.style.background = gradient;
+        }
+
+        function updateFinancialAdvice(remaining, income, totalExpense) {
+            const adviceContainer = document.getElementById('financialAdvice');
+            if (!adviceContainer) return;
+
+            let advice = '';
+
+            if (remaining < 0) {
+                advice = `
+                    <div class="advice-item danger">
+                        ⚠️ <strong>注意！</strong> 支出超過收入 ${Math.abs(remaining).toLocaleString()} 元，需要調整支出計劃
+                    </div>
+                    <div class="advice-item warning">
+                        💡 <strong>建議：</strong> 檢查哪些支出可以減少，優先保留基本需求
+                    </div>
+                `;
+            } else if (remaining < income * 0.1) {
+                advice = `
+                    <div class="advice-item warning">
+                        ⚠️ <strong>小心！</strong> 剩餘金額太少，建議至少保留收入的10%做緊急預備金
+                    </div>
+                    <div class="advice-item good">
+                        💡 <strong>建議：</strong> 嘗試減少一些非必要支出，增加儲蓄空間
+                    </div>
+                `;
+            } else if (remaining < income * 0.2) {
+                advice = `
+                    <div class="advice-item good">
+                        ✅ <strong>不錯！</strong> 有 ${(remaining/income*100).toFixed(1)}% 的剩餘可以存錢
+                    </div>
+                    <div class="advice-item good">
+                        💡 <strong>建議：</strong> 可以開始小額投資，讓錢生錢
+                    </div>
+                `;
+            } else {
+                advice = `
+                    <div class="advice-item good">
+                        🎉 <strong>太棒了！</strong> 有 ${(remaining/income*100).toFixed(1)}% 的收入可以存錢和投資
+                    </div>
+                    <div class="advice-item good">
+                        💰 <strong>建議：</strong> 可以設定更大的理財目標，如買房、投資等
+                    </div>
+                `;
+            }
+
+            adviceContainer.innerHTML = advice;
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             initIndicator();
@@ -864,9 +1538,52 @@
             // 設置計算器事件
             const yearSalaryInput = document.getElementById('yearSalary');
             if (yearSalaryInput) {
-                yearSalaryInput.addEventListener('input', updateCalculator);
+                yearSalaryInput.addEventListener('input', () => {
+                    updateCalculator();
+                    updateExpenseAnalysis(); // 收入變化時也更新支出分析
+                });
                 updateCalculator(); // 初始計算
             }
+
+            // 設置支出分析器事件監聽
+            const expenseInputs = ['housing', 'living', 'transport', 'education', 'insurance', 'entertainment'];
+            expenseInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', updateExpenseAnalysis);
+                    // 設置預設值
+                    if (!input.value) {
+                        const defaultValues = {
+                            housing: 20000,
+                            living: 12000,
+                            transport: 3000,
+                            education: 5000,
+                            insurance: 3000,
+                            entertainment: 2000
+                        };
+                        input.value = defaultValues[id];
+                    }
+                }
+            });
+
+            // 初始化支出分析
+            updateExpenseAnalysis();
+
+            // 手機版優化：防止雙擊放大
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            });
+
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
         });
     </script>
 </body>
