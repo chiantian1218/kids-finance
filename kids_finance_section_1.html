@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小小理財家：培養正確金錢觀</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            display: none;
+            background: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 首頁樣式 */
+        .title-slide {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: #636e72;
+            margin-bottom: 40px;
+        }
+
+        .target-audience {
+            background: rgba(255,255,255,0.8);
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            color: #2d3436;
+        }
+
+        /* 內容頁樣式 */
+        .content-slide {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #2d3436;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .content-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .content-box h3 {
+            font-size: 1.5rem;
+            color: #2d3436;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            font-size: 1.8rem;
+            margin-right: 10px;
+        }
+
+        .content-list {
+            list-style: none;
+        }
+
+        .content-list li {
+            font-size: 1.1rem;
+            color: #636e72;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .content-list li:before {
+            content: "✓";
+            color: #00b894;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 互動式元素 */
+        .interactive-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 3px dashed #e17055;
+        }
+
+        .interactive-title {
+            font-size: 1.3rem;
+            color: #d63031;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* 計算器樣式 */
+        .calculator {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .calc-input {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .calc-input input {
+            border: 2px solid #74b9ff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 0 10px;
+            font-size: 1.1rem;
+            width: 120px;
+        }
+
+        .calc-result {
+            background: #00b894;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* 圓餅圖樣式 */
+        .pie-chart {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff7675 0deg 144deg,
+                #74b9ff 144deg 230.4deg,
+                #fd79a8 230.4deg 252deg,
+                #fdcb6e 252deg 288deg,
+                #6c5ce7 288deg 309.6deg,
+                #00b894 309.6deg 360deg
+            );
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .pie-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        /* 導航按鈕 */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: #74b9ff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #0984e3;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #b2bec3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 頁碼指示器 */
+        .slide-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: #74b9ff;
+            transform: scale(1.2);
+        }
+
+        /* 動畫效果 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide.active .content-box {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .slide {
+                padding: 30px 20px;
+            }
+        }
+
+        /* 特殊樣式 */
+        .highlight-box {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: #fab1a0;
+            color: #2d3436;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #e84393;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: #00b894;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- 第1頁：標題頁 -->
+        <div class="slide title-slide active">
+            <h1 class="main-title">🏦 小小理財家 💰</h1>
+            <p class="subtitle">培養正確金錢觀念，打造未來財富自由</p>
+            <div class="target-audience">
+                <strong>適用對象：</strong>國小五、六年級學生 + 家長<br>
+                <strong>教學目標：</strong>建立健康金錢觀念 & 學習現代賺錢方式
+            </div>
+        </div>
+
+        <!-- 第2頁：金錢基礎認知 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">💡 金錢基礎認知</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3><span class="icon">🤔</span>什麼是金錢？</h3>
+                    <ul class="content-list">
+                        <li>交換工具：用來買需要的東西</li>
+                        <li>價值衡量：表示東西的價值高低</li>
+                        <li>儲存價值：今天的錢明天還能用</li>
+                        <li>信任象徵：大家都相信它有價值</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">⚖️</span>需要 VS 想要</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div style="background: #00b894; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                            <strong>需要 ✅</strong><br>
+                            食物、衣服<br>
+                            學用品、交通
+                        </div>
+                        <div style="background: #e84393; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                            <strong>想要 ⚠️</strong><br>
+                            最新手機、名牌<br>
+                            零食、玩具
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="interactive-box">
+                <div class="interactive-title">🎯 親子互動：分類遊戲</div>
+                讓孩子把家中物品分為「需要」和「想要」兩類，討論每項物品的重要性！
+            </div>
+        </div>
+
+        <!-- 第3頁：家庭責任 VS 賺錢機會 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">🏠 家庭責任 VS 💼 賺錢機會</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3><span class="icon">❤️</span>家庭責任（不給錢）</h3>
+                    <ul class="content-list">
+                        <li>整理自己的房間和書桌</li>
+                        <li>收拾自己的玩具和衣物</li>
+                        <li>幫忙擺碗筷、收拾餐具</li>
+                        <li>照顧自己的學用品</li>
+                        <li>協助簡單的家庭清潔</li>
+                    </ul>
+                    <div class="highlight-box">
+                        因為愛家，所以付出！💕
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">💰</span>真正的賺錢機會</h3>
+                    <ul class="content-list">
+                        <li>為家庭外的人提供服務</li>
+                        <li>販售自己的創作或物品</li>
+                        <li>運用特殊技能幫助他人</li>
+                        <li>創造有價值的內容</li>
+                        <li>解決別人的問題</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>重要提醒：</strong>真正的賺錢需要為別人創造價值！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第4頁：現代賺錢方式 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">🚀 現代賺錢方式大揭密</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3><span class="icon">📱</span>數位內容創作</h3>
+                    <ul class="content-list">
+                        <li>YouTube/TikTok 教學影片</li>
+                        <li>直播分享才藝或知識</li>
+                        <li>製作有趣的短片內容</li>
+                        <li>寫部落格分享經驗</li>
+                    </ul>
+                    <div style="background: #fd79a8; color: white; padding: 10px; border-radius: 8px; text-align: center; margin-top: 10px;">
+                        <strong>關鍵：創意 > 勞力</strong>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">🛒</span>電商與網路販售</h3>
+                    <ul class="content-list">
+                        <li>蝦皮、露天販售手作品</li>
+                        <li>社群媒體推廣商品</li>
+                        <li>轉售限量收藏品</li>
+                        <li>提供網路代購服務</li>
+                    </ul>
+                    <div style="background: #00b894; color: white; padding: 10px; border-radius: 8px; text-align: center; margin-top: 10px;">
+                        <strong>關鍵：市場嗅覺 + 服務</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="content-grid" style="margin-top: 30px;">
+                <div class="content-box">
+                    <h3><span class="icon">🎓</span>知識技能分享</h3>
+                    <ul class="content-list">
+                        <li>線上一對一家教</li>
+                        <li>才藝教學（音樂、繪畫）</li>
+                        <li>製作教學課程</li>
+                        <li>協助長輩學習3C產品</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">💡</span>創新服務</h3>
+                    <ul class="content-list">
+                        <li>設計簡單圖片或Logo</li>
+                        <li>協助製作影片封面</li>
+                        <li>提供翻譯服務</li>
+                        <li>網路問卷調查</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第5頁：家庭收入實例 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">💼 家庭收入大解密</h2>
+            <div class="calculator">
+                <h3 style="text-align: center; margin-bottom: 20px;">🧮 收入計算器</h3>
+                <div class="calc-input">
+                    <span>年薪：</span>
+                    <input type="number" id="yearSalary" placeholder="600000" value="600000">
+                    <span>元</span>
+                </div>
+                <div class="calc-input">
+                    <span>每月收入 = </span>
+                    <span id="monthSalary">50,000</span>
+                    <span>元</span>
+                </div>
+                <div class="calc-input">
+                    <span>每天收入 = </span>
+                    <span id="daySalary">1,667</span>
+                    <span>元</span>
+                </div>
+                <div class="calc-input">
+                    <span>每小時收入 = </span>
+                    <span id="hourSalary">208</span>
+                    <span>元</span>
+                </div>
+                <div class="calc-result" id="result">
+                    爸媽工作1小時 = 你的一頓午餐錢！
+                </div>
+            </div>
+            <div class="interactive-box">
+                <div class="interactive-title">👨‍👩‍👧‍👦 親子互動時間</div>
+                家長可以輸入真實年薪，讓孩子了解賺錢的不容易，培養感恩的心！
+            </div>
+        </div>
+
+        <!-- 第6頁：家庭支出分析 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">📊 家庭支出大解析</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>💰 每月支出分配（以5萬為例）</h3>
+                    <div class="pie-chart"></div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff7675;"></div>
+                            <span>房貸 40%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #74b9ff;"></div>
+                            <span>生活費 24%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fd79a8;"></div>
+                            <span>交通 6%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fdcb6e;"></div>
+                            <span>教育 10%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #6c5ce7;"></div>
+                            <span>保險 6%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #00b894;"></div>
+                            <span>儲蓄 10%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3>💡 支出優先順序</h3>
+                    <div style="margin: 20px 0;">
+                        <div style="background: #ff7675; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
+                            <strong>1. 基本需求</strong>：食物、住房、交通
+                        </div>
+                        <div style="background: #fdcb6e; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
+                            <strong>2. 安全保障</strong>：保險、緊急預備金
+                        </div>
+                        <div style="background: #74b9ff; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
+                            <strong>3. 未來投資</strong>：教育、理財、儲蓄
+                        </div>
+                        <div style="background: #00b894; color: white; padding: 10px; border-radius: 8px; margin: 8px 0;">
+                            <strong>4. 生活品質</strong>：娛樂、旅遊、享受
+                        </div>
+                    </div>
+                    <div class="success-box">
+                        記住：先滿足需要，再考慮想要！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第7頁：投資理財入門 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">📈 投資理財小學堂</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3><span class="icon">🌱</span>複利的魔法</h3>
+                    <div style="background: #ddd; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <strong>每月存1000元，年利率5%</strong>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center;">
+                            <div style="background: #74b9ff; color: white; padding: 10px; border-radius: 5px;">
+                                <strong>1年後</strong><br>12,300元
+                            </div>
+                            <div style="background: #00b894; color: white; padding: 10px; border-radius: 5px;">
+                                <strong>5年後</strong><br>66,300元
+                            </div>
+                            <div style="background: #e84393; color: white; padding: 10px; border-radius: 5px;">
+                                <strong>10年後</strong><br>155,000元
+                            </div>
+                            <div style="background: #fd79a8; color: white; padding: 10px; border-radius: 5px;">
+                                <strong>20年後</strong><br>411,000元
+                            </div>
+                        </div>
+                    </div>
+                    <div class="highlight-box">
+                        時間 + 耐心 = 財富增長！
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">🎯</span>投資分配建議</h3>
+                    <ul class="content-list">
+                        <li>緊急預備金：40%（安全但低利率）</li>
+                        <li>穩健投資：40%（基金、ETF）</li>
+                        <li>成長投資：15%（股票、新興產業）</li>
+                        <li>夢想基金：5%（特殊目標儲蓄）</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>投資金句：</strong><br>
+                        不要把所有雞蛋放在同一個籃子裡！
+                    </div>
+                    <div class="interactive-box">
+                        <div class="interactive-title">🏦 親子理財會議</div>
+                        每月定期討論家庭財務狀況，讓孩子參與理財決策！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第8頁：實戰案例分析 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">📚 實戰案例分析</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3><span class="icon">🌟</span>成功案例一：小YouTuber</h3>
+                    <div style="background: #fd79a8; color: white; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <strong>小明（10歲）- 摺紙教學頻道</strong>
+                    </div>
+                    <ul class="content-list">
+                        <li>每週發布2支摺紙教學影片</li>
+                        <li>3個月累積5000訂閱者</li>
+                        <li>月收入：3000-5000元</li>
+                        <li>學會：影片製作、時間管理</li>
+                    </ul>
+                    <div class="success-box">
+                        關鍵成功因素：持續創作 + 獨特內容
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">🛍️</span>成功案例二：小賣家</h3>
+                    <div style="background: #00b894; color: white; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <strong>小美（11歲）- 手機殼設計師</strong>
+                    </div>
+                    <ul class="content-list">
+                        <li>設計可愛的手機殼貼紙</li>
+                        <li>透過蝦皮和Instagram販售</li>
+                        <li>一學期賺取10000元</li>
+                        <li>學會：設計軟體、客服應對</li>
+                    </ul>
+                    <div class="success-box">
+                        關鍵成功因素：市場調查 + 創意設計
+                    </div>
+                </div>
+            </div>
+            <div class="content-grid" style="margin-top: 30px;">
+                <div class="content-box">
+                    <h3><span class="icon">🎓</span>成功案例三：小老師</h3>
+                    <div style="background: #6c5ce7; color: white; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <strong>小華（12歲）- 線上數學家教</strong>
+                    </div>
+                    <ul class="content-list">
+                        <li>教導低年級學生數學</li>
+                        <li>每週3堂課，每堂1小時</li>
+                        <li>時薪200元，月收入2400元</li>
+                        <li>學會：教學技巧、責任感</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">💡</span>共同成功要素</h3>
+                    <div style="display: grid; gap: 10px;">
+                        <div style="background: #74b9ff; color: white; padding: 12px; border-radius: 8px; text-align: center;">
+                            <strong>1. 發現需求</strong>
+                        </div>
+                        <div style="background: #fd79a8; color: white; padding: 12px; border-radius: 8px; text-align: center;">
+                            <strong>2. 提供價值</strong>
+                        </div>
+                        <div style="background: #00b894; color: white; padding: 12px; border-radius: 8px; text-align: center;">
+                            <strong>3. 持續改進</strong>
+                        </div>
+                        <div style="background: #e84393; color: white; padding: 12px; border-radius: 8px; text-align: center;">
+                            <strong>4. 誠信經營</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第9頁：行動計劃 -->
+        <div class="slide content-slide">
+            <h2 class="slide-title">🎯 我的理財行動計劃</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3><span class="icon">📝</span>第一步：設定目標</h3>
+                    <div class="interactive-box">
+                        <div class="interactive-title">我想要的東西：</div>
+                        <div style="border: 2px dashed #ccc; padding: 20px; margin: 10px 0; min-height: 80px; background: white;">
+                            （例：新遊戲機、腳踏車、學習用品...）
+                        </div>
+                    </div>
+                    <div class="interactive-box">
+                        <div class="interactive-title">目標金額：</div>
+                        <div style="border: 2px dashed #ccc; padding: 20px; margin: 10px 0; background: white;">
+                            _____ 元
+                        </div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <h3><span class="icon">⏰</span>第二步：時間規劃</h3>
+                    <div style="background: #ddd; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <strong>存錢計算機</strong>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center;">
+                            <div>
+                                目標金額：<br>
+                                <input type="number" style="width: 100px; padding: 5px; text-align: center;" placeholder="5000"> 元
+                            </div>
+                            <div>
+                                每月可存：<br>
+                                <input type="number" style="width: 100px; padding: 5px; text-align: center;" placeholder="500"> 元
+                            </div>
+                        </div>
+                        <div style="background: #00b894; color: white; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                            需要時間：<strong>10 個月</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box" style="margin-top: 30px;">
+                <h3><span class="icon">🚀</span>第三步：賺錢策略</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0;">
+                    <div style="background: #74b9ff; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <strong>內容創作</strong><br>
+                        製作教學影片<br>
+                        分享興趣愛好
+                    </div>
+                    <div style="background: #fd79a8; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <strong>技能服務</strong><br>
+                        家教教學<br>
+                        才藝表演
+                    </div>
+                    <div style="background: #00b894; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <strong>商品販售</strong><br>
+                        手工藝品<br>
+                        二手物品
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    記住：選擇自己有興趣且擅長的方式！
+                </div>
+            </div>
+        </div>
+
+        <!-- 第10頁：總結與祝福 -->
+        <div class="slide title-slide">
+            <h1 class="main-title">🎉 恭喜你！</h1>
+            <p class="subtitle">你已經掌握了正確的理財觀念</p>
+            <div class="content-box" style="max-width: 800px; text-align: left;">
+                <h3 style="color: #2d3436; text-align: center; margin-bottom: 30px;">理財金句總複習</h3>
+                <div style="display: grid; gap: 15px;">
+                    <div style="background: #ff7675; color: white; padding: 15px; border-radius: 10px;">
+                        <strong>💖 家庭責任：</strong>因為愛家，所以付出，不求回報
+                    </div>
+                    <div style="background: #74b9ff; color: white; padding: 15px; border-radius: 10px;">
+                        <strong>💰 賺錢秘訣：</strong>為別人創造價值，解決問題
+                    </div>
+                    <div style="background: #00b894; color: white; padding: 15px; border-radius: 10px;">
+                        <strong>🌱 投資智慧：</strong>時間 + 耐心 = 財富增長
+                    </div>
+                    <div style="background: #e84393; color: white; padding: 15px; border-radius: 10px;">
+                        <strong>🎯 消費原則：</strong>先滿足需要，再考慮想要
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <h3>下一步行動：</h3>
+                    開始你的第一個賺錢計劃，為夢想目標努力！💪
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 導航控制 -->
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ 上一頁</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一頁 ➡️</button>
+    </div>
+
+    <!-- 頁面指示器 -->
+    <div class="slide-indicator" id="indicator"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // 初始化指示器
+        function initIndicator() {
+            const indicator = document.getElementById('indicator');
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicator.appendChild(dot);
+            }
+        }
+
+        // 更新顯示
+        function updateSlideDisplay() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+
+            // 更新指示器
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+
+            // 更新按鈕狀態
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        // 切換投影片
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlideDisplay();
+            }
+        }
+
+        // 跳轉到指定投影片
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateSlideDisplay();
+        }
+
+        // 鍵盤控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // 收入計算器
+        function updateCalculator() {
+            const yearSalary = document.getElementById('yearSalary').value;
+            if (yearSalary) {
+                const monthSalary = Math.round(yearSalary / 12);
+                const daySalary = Math.round(monthSalary / 30);
+                const hourSalary = Math.round(daySalary / 8);
+
+                document.getElementById('monthSalary').textContent = monthSalary.toLocaleString();
+                document.getElementById('daySalary').textContent = daySalary.toLocaleString();
+                document.getElementById('hourSalary').textContent = hourSalary.toLocaleString();
+
+                const result = document.getElementById('result');
+                if (hourSalary < 100) {
+                    result.textContent = `爸媽工作1小時 = 你的一包零食錢！`;
+                } else if (hourSalary < 200) {
+                    result.textContent = `爸媽工作1小時 = 你的一頓午餐錢！`;
+                } else if (hourSalary < 500) {
+                    result.textContent = `爸媽工作1小時 = 你的一本課外書！`;
+                } else {
+                    result.textContent = `爸媽工作1小時 = 你的一個新玩具！`;
+                }
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initIndicator();
+            updateSlideDisplay();
+            
+            // 設置計算器事件
+            const yearSalaryInput = document.getElementById('yearSalary');
+            if (yearSalaryInput) {
+                yearSalaryInput.addEventListener('input', updateCalculator);
+                updateCalculator(); // 初始計算
+            }
+        });
+    </script>
+</body>
+</html>
