@@ -67,15 +67,6 @@
             display: block;
         }
 
-        /* 確保所有固定元素不重疊 */
-        .nav-buttons {
-            z-index: 1001;
-        }
-
-        .slide-indicator {
-            z-index: 1000;
-        }
-
         /* 加強手機版內容區域 */
         @media (max-width: 768px) {
             .presentation-container {
@@ -104,7 +95,7 @@
             }
 
             /* 改善觸控體驗 */
-            .nav-btn, .indicator-dot {
+            .nav-btn {
                 touch-action: manipulation;
                 -webkit-tap-highlight-color: transparent;
             }
@@ -445,6 +436,7 @@
             right: 30px;
             display: flex;
             gap: 15px;
+            z-index: 1001;
         }
 
         .nav-btn {
@@ -467,30 +459,6 @@
             background: #b2bec3;
             cursor: not-allowed;
             transform: none;
-        }
-
-        /* 頁碼指示器 */
-        .slide-indicator {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        .indicator-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .indicator-dot.active {
-            background: #74b9ff;
-            transform: scale(1.2);
         }
 
         /* 動畫效果 */
@@ -1352,34 +1320,16 @@
         </div>
     </div>
 
-    <!-- 滾動提示 -->
-    <div class="scroll-hint" id="scrollHint">👆 滑動瀏覽</div>
-
     <!-- 導航控制 -->
     <div class="nav-buttons">
         <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ 上一頁</button>
         <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一頁 ➡️</button>
     </div>
 
-    <!-- 頁面指示器 -->
-    <div class="slide-indicator" id="indicator"></div>
-
     <script>
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         const totalSlides = slides.length;
-
-        // 初始化指示器
-        function initIndicator() {
-            const indicator = document.getElementById('indicator');
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'indicator-dot';
-                if (i === 0) dot.classList.add('active');
-                dot.onclick = () => goToSlide(i);
-                indicator.appendChild(dot);
-            }
-        }
 
         // 更新顯示
         function updateSlideDisplay() {
@@ -1387,42 +1337,10 @@
                 slide.classList.toggle('active', index === currentSlide);
             });
 
-            // 更新指示器
-            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
-
             // 更新按鈕狀態
             document.getElementById('prevBtn').disabled = currentSlide === 0;
             document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-            
-            // 檢查是否需要顯示滾動提示（僅手機版）
-            if (window.innerWidth <= 768) {
-                setTimeout(checkScrollHint, 500);
-            }
         }
-
-        // 檢查是否需要顯示滾動提示
-        function checkScrollHint() {
-            const activeSlide = slides[currentSlide];
-            const scrollHint = document.getElementById('scrollHint');
-            
-            if (activeSlide.scrollHeight > activeSlide.clientHeight) {
-                scrollHint.classList.add('show');
-                // 3秒後自動隱藏
-                setTimeout(() => {
-                    scrollHint.classList.remove('show');
-                }, 3000);
-            } else {
-                scrollHint.classList.remove('show');
-            }
-        }
-
-        // 滾動時隱藏提示
-        document.addEventListener('scroll', () => {
-            const scrollHint = document.getElementById('scrollHint');
-            scrollHint.classList.remove('show');
-        }, true);
 
         // 切換投影片
         function changeSlide(direction) {
@@ -1431,12 +1349,6 @@
                 currentSlide = newSlide;
                 updateSlideDisplay();
             }
-        }
-
-        // 跳轉到指定投影片
-        function goToSlide(slideIndex) {
-            currentSlide = slideIndex;
-            updateSlideDisplay();
         }
 
         // 觸控手勢支援（手機滑動切換頁面）
@@ -1639,7 +1551,6 @@
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            initIndicator();
             updateSlideDisplay();
             
             // 設置計算器事件
